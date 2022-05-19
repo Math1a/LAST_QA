@@ -1,7 +1,7 @@
 %% definitions
-lapses = 2 ; % number of lapses = iterations of the main loop
-N = 2; % Number of images per camera
-expTime = 5; % exposure time
+lapses = 20; % number of lapses = iterations of the main loop
+N = 5; % Number of images per camera
+expTime = 15; % exposure time
 slaves = 2; % The number of slaves (Cameras)
 
 %% initiate session - logging and status of cameras
@@ -71,7 +71,7 @@ for lapse=1:lapses
     
     TakeExp(lapse) = 1; % is this a variable? unsure of its use
     time0 = tic; % start a stopwatch timer
-    maximum = 60; % time in seconds "allowed" for taking images before forcing stop
+    maximum = expTime * (N + 2) + 30; % time in seconds "allowed" for taking images before forcing stop
     NumTaken = [];
     for i=1:slaves
         if isempty(P.Camera{i}.classCommand('ProgressiveFrame')) % check if slave is alive (checks how many images were last taken)
@@ -115,9 +115,9 @@ for lapse=1:lapses
     
     
     imageSum = sum(NumTaken); % number of images taken
-    fprintf("\n%i out of %i images were captured: \n", imageSum, N*slaves);
+    fprintf("\n%i out of %i images were captured \n", imageSum, N*slaves);
     % check which images were saved and when:
-    fprintf("\n%i out of %i images were saved on disk: \n", sum(newimages), N*slaves);
+    fprintf("\n%i out of %i images were saved on disk \n", sum(newimages), N*slaves);
 end
 
 
